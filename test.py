@@ -18,5 +18,5 @@ sigma = unhexlify('C72703C22A96D9992F3DEA876497E392')
 
 makwa = Makwa(pi, sigma, work_factor=4096, pre_hashing=False)
 out = makwa.digest(n)
-print hexlify(out)
+print(hexlify(out))
 
