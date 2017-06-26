@@ -2,6 +2,10 @@
 Makwa
 =====
 
+
+.. image:: https://travis-ci.org/AntonKueltz/makwa.svg?branch=master
+    :target: https://travis-ci.org/AntonKueltz/makwa
+
 Makwa is a password hashing function designed by Thomas Pornin. This implementation is in pure python with no 3rd party dependencies. From the `Passwords14 Slides`_:
 
 .. code::
@@ -15,9 +19,6 @@ Makwa is a password hashing function designed by Thomas Pornin. This implementat
     * factor increase, fast path, escrow
     * can be delegated
     * named after the Ojibwe name for the American black bear
-
-.. image:: https://travis-ci.org/AntonKueltz/makwa.svg?branch=master
-    :target: https://travis-ci.org/AntonKueltz/makwa
     
 Reference Material
 ==================
