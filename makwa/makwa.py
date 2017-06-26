@@ -57,7 +57,7 @@ class Makwa:
         xb = b'\x00' + sb + password + pack('=B', u)
 
         x = int(hexlify(xb), 16)
-        for _ in range(self.m_cost+1):
+        for _ in range(self.m_cost + 1):
             x = pow(x, 2, n)
         out = int_to_bytes(x)
 
@@ -85,7 +85,7 @@ class Makwa:
 
         B_ = ''
         for i in range(0, len(M_), 3):
-            mi = M_[i:i+3]
+            mi = M_[i:(i + 3)]
             B_ += self._encode_sequence(mi)
 
         return B_[:(4 * (len(M_) // 3) - (-len(M) % 3))]

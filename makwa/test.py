@@ -3,6 +3,7 @@ import unittest
 
 from .makwa import Makwa
 
+
 class MakwaTest(unittest.TestCase):
 
     def test_spec_vector(self):
@@ -29,6 +30,6 @@ class MakwaTest(unittest.TestCase):
         h = makwa.hash(pi, n, salt=sigma)
         self.assertEqual(h, '+RK3n5jz7gs_s211_xycDwiqW2ZkvPeqHZJfjkg_yc6g5u8JOTqxcQoI')
 
+
 if __name__ == '__main__':
     unittest.main()
-
