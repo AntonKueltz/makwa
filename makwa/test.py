@@ -26,7 +26,7 @@ class MakwaTest(unittest.TestCase):
 
         makwa = Makwa(work_factor=4096, pre_hashing=False)
         digest = makwa.digest(pi, n, salt=sigma)
-        self.assertEqual(hexlify(digest), 'c9cea0e6ef09393ab1710a08')
+        self.assertEqual(hexlify(digest), b'c9cea0e6ef09393ab1710a08')
         h = makwa.hash(pi, n, salt=sigma)
         self.assertEqual(h, '+RK3n5jz7gs_s211_xycDwiqW2ZkvPeqHZJfjkg_yc6g5u8JOTqxcQoI')
 
