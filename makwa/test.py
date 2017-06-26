@@ -16,7 +16,7 @@ n = int(
 )
 sigma = unhexlify('C72703C22A96D9992F3DEA876497E392')
 
-makwa = Makwa(pi, sigma, work_factor=4096, pre_hashing=False)
-out = makwa.digest(n)
+makwa = Makwa(work_factor=4096, pre_hashing=False)
+out = makwa.digest(pi, n, salt=sigma)
 print(hexlify(out))
-
+print(makwa.hash(pi, n, salt=sigma))
