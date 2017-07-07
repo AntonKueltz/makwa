@@ -1,4 +1,4 @@
-from binascii import hexlify
+from binascii import b2a_base64, hexlify
 from hashlib import sha256
 import hmac
 from os import urandom
@@ -11,6 +11,15 @@ def int_to_bytes(i):
         bs = pack('=B', i & 0xff) + bs
         i >>= 8
     return bs
+
+
+def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hashing=True):
+    makwa = Makwa(h=h, work_factor=work_factor, pre_hashing=pre_hashing)
+    return makwa.hash(password, n, salt=salt)
+
+
+def checkpw(password, hashed_password):
+    pass
 
 
 class Makwa:
@@ -33,10 +42,10 @@ class Makwa:
         h += '_'
         h += self._base64(salt)
         h += '_'
-        h += self._base64(self.digest(password, n, salt=salt))
+        h += self._base64(self._digest(password, n, salt=salt))
         return h
 
-    def digest(self, password, n, salt=None,):
+    def _digest(self, password, n, salt=None,):
         password = bytes(password)
         if salt is None:
             salt = urandom(16)
@@ -81,14 +90,10 @@ class Makwa:
         return T[:out_len]
 
     def _base64(self, M):
-        M_ = M + (b'\x00' * ((3 - (len(M) % 3)) % 3))
-
-        B_ = ''
-        for i in range(0, len(M_), 3):
-            mi = M_[i:(i + 3)]
-            B_ += self._encode_sequence(mi)
-
-        return B_[:(4 * (len(M_) // 3) - (-len(M) % 3))]
+        b64 = b2a_base64(M)
+        if not isinstance(b64, str):
+            b64 = b64.decode()
+        return b64.replace('=', '').replace('\n', '')
 
     def _state_data(self):
         ret = ''
@@ -111,17 +116,3 @@ class Makwa:
         ret += '2' if w == 1 else '3'
         ret += str(delta - 1) if w == 1 else str(delta)
         return ret
-
-    def _encode_sequence(self, b):
-        b1, b2, b3 = b[0], b[1], b[2]
-        if not any([isinstance(b1, int), isinstance(b2, int), isinstance(b3, int)]):
-            b1, b2, b3 = ord(b1), ord(b2), ord(b3)
-
-        d1 = b1 // 4
-        d2 = 16 * (b1 % 4) + b2 // 16
-        d3 = 4 * (b2 % 16) + b3 // 64
-        d4 = b3 % 64
-        encoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
-                   'abcdefghijklmnopqrstuvwxyz' \
-                   '0123456789+/'
-        return ''.join(map(lambda d: encoding[d], [d1, d2, d3, d4]))
