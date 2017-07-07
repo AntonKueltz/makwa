@@ -1,4 +1,4 @@
-from binascii import b2a_base64, hexlify
+from binascii import a2b_base64, b2a_base64, hexlify
 from hashlib import sha256
 import hmac
 from os import urandom
@@ -18,8 +18,12 @@ def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hashing=True)
     return makwa.hash(password, n, salt=salt)
 
 
-def checkpw(password, hashed_password):
-    pass
+def checkpw(password, hashed_password, n, h=sha256):
+    state = hashed_password.split('_')[1]
+    work_factor = int(state[1]) * (1 << int(state[2:]))
+    pre_hashing = state[0] in 'rb'
+    makwa = Makwa(h=h, work_factor=work_factor, pre_hashing=pre_hashing)
+    return makwa.check(password, hashed_password, n)
 
 
 class Makwa:
@@ -44,6 +48,18 @@ class Makwa:
         h += '_'
         h += self._base64(self._digest(password, n, salt=salt))
         return h
+
+    def check(self, password, hashed_password, n):
+        modhash, state, salt, digest = hashed_password.split('_')
+        modhash = self._unbase64(modhash)
+        salt = self._unbase64(salt)
+        digest = self._unbase64(digest)
+
+        if self._kdf(int_to_bytes(n), 8) != modhash:
+            return False
+
+        check_digest = self._digest(password, n, salt=salt)
+        return digest == check_digest
 
     def _digest(self, password, n, salt=None,):
         password = bytes(password)
@@ -89,11 +105,15 @@ class Makwa:
             T += V
         return T[:out_len]
 
-    def _base64(self, M):
-        b64 = b2a_base64(M)
+    def _base64(self, m):
+        b64 = b2a_base64(m)
         if not isinstance(b64, str):
             b64 = b64.decode()
         return b64.replace('=', '').replace('\n', '')
+
+    def _unbase64(self, m):
+        padding = ((3 - (len(m) % 3)) % 3) * '='
+        return a2b_base64(m + padding)
 
     def _state_data(self):
         ret = ''

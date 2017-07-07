@@ -1,7 +1,7 @@
 from binascii import hexlify, unhexlify
 import unittest
 
-from .makwa import Makwa, hashpw
+from .makwa import Makwa, hashpw, checkpw
 
 
 class MakwaTest(unittest.TestCase):
@@ -33,6 +33,15 @@ class MakwaTest(unittest.TestCase):
 
         h = hashpw(pi, n, salt=sigma, work_factor=4096, pre_hashing=False)
         self.assertEqual(h, '+RK3n5jz7gs_s211_xycDwiqW2ZkvPeqHZJfjkg_yc6g5u8JOTqxcQoI')
+
+        self.assertTrue(makwa.check(pi, h, n))
+        self.assertTrue(checkpw(pi, h, n))
+
+        self.assertFalse(makwa.check('password', h, n))
+        self.assertFalse(checkpw('password', h, n))
+
+        self.assertFalse(makwa.check(pi, h, 0xbadc0de))
+        self.assertFalse(checkpw(pi, h, 0xbadc0de))
 
 
 if __name__ == '__main__':
