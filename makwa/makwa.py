@@ -36,9 +36,11 @@ class Makwa:
         self.post_hashing_length = 12
 
     def hash(self, password, n, salt=None,):
-        password = bytes(password)
+        if not isinstance(password, bytes):
+            raise TypeError('Unicode-objects must be encoded before hashing')
         if salt is None:
             salt = urandom(16)
+
         h = ''
         h += self._base64(self._kdf(int_to_bytes(n), 8))
         h += '_'
@@ -50,6 +52,9 @@ class Makwa:
         return h
 
     def check(self, password, hashed_password, n):
+        if not isinstance(password, bytes):
+            raise TypeError('Unicode-objects must be encoded before hashing')
+
         modhash, state, salt, digest = hashed_password.split('_')
         modhash = self._unbase64(modhash)
         salt = self._unbase64(salt)
@@ -62,7 +67,8 @@ class Makwa:
         return digest == check_digest
 
     def _digest(self, password, n, salt=None,):
-        password = bytes(password)
+        if not isinstance(password, bytes):
+            raise TypeError('Unicode-objects must be encoded before hashing')
         if salt is None:
             salt = urandom(16)
 
