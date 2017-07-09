@@ -15,9 +15,10 @@ class TestCommand(Command):
         from subprocess import call
         call(['python', '-m', 'makwa.test'])
 
+
 setup(
     name='makwa',
-    version='1.0.0',
+    version='1.0.1',
     author='Anton Kueltz',
     author_email='kueltz.anton@gmail.com',
     keywords='makwa password hashing kdf',
