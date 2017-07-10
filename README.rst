@@ -45,9 +45,7 @@ Usage
 
 .. code:: python
 
-    from makwa import Makwa
+    from makwa import hashpw, checkpw
     
-    m = Makwa()  # option h and work_factor parameter e.g. Makwa(work_factor=8192, h=sha1)
-    hashed = m.hash('password')  # optional salt parameter e.g. m.hash('password', salt='salt')
-    
-    
+    hashed_pw = hashpw(password, n, salt=<optional salt>, work_factor=<rounds>, pre_hashing=<True|False>)
+    valid_pw = checkpw(password, hashed_pw, n)  # returns a boolean
