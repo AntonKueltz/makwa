@@ -18,7 +18,7 @@ class TestCommand(Command):
 
 setup(
     name='makwa',
-    version='1.0.1',
+    version='1.0.2',
     author='Anton Kueltz',
     author_email='kueltz.anton@gmail.com',
     keywords='makwa password hashing kdf',
