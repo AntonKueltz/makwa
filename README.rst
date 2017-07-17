@@ -48,4 +48,4 @@ Usage
     from makwa import hashpw, checkpw
     
     hashed_pw = hashpw(password, n, salt=<optional salt>, work_factor=<rounds>, pre_hashing=<True|False>)
-    valid_pw = checkpw(password, hashed_pw, n)  # returns a boolean
+    is_valid = checkpw(password, hashed_pw, n)  # returns a boolean
