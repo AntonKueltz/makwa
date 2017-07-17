@@ -1,11 +1,12 @@
 from binascii import hexlify, unhexlify
+from hashlib import sha512
+from re import findall
 import unittest
 
 from .makwa import Makwa, hashpw, checkpw
 
 
 class MakwaTest(unittest.TestCase):
-
     def test_spec_vector(self):
         pi = unhexlify(
             '4765676F206265736877616A692761616B656E20617765206D616B77613B206F6'
@@ -43,6 +44,30 @@ class MakwaTest(unittest.TestCase):
 
         self.assertFalse(makwa.check(pi, h, 0xbadc0de))
         self.assertFalse(checkpw(pi, h, 0xbadc0de))
+
+    def test_kdf_sha256(self):
+        m = Makwa()
+        matches = []
+
+        with open('kat.txt', 'r') as f:
+            pattern = r'KDF/SHA-256\ninput: ([a-f0-9]*)\noutput: ([a-f0-9]*)'
+            matches = findall(pattern, f.read())
+
+        for (input, output) in matches:
+            result = hexlify(m._kdf(unhexlify(input), 100))
+            self.assertEqual(result, output)
+
+    def test_kdf_sha512(self):
+        m = Makwa(h=sha512)
+        matches = []
+
+        with open('kat.txt', 'r') as f:
+            pattern = r'KDF/SHA-512\ninput: ([a-f0-9]*)\noutput: ([a-f0-9]*)'
+            matches = findall(pattern, f.read())
+
+        for (input, output) in matches:
+            result = hexlify(m._kdf(unhexlify(input), 100))
+            self.assertEqual(result, output)
 
 
 if __name__ == '__main__':
