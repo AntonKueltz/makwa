@@ -1,6 +1,7 @@
 from binascii import hexlify, unhexlify
 from hashlib import sha512
 from re import findall
+from six import b
 import unittest
 
 from .makwa import Makwa, hashpw, checkpw
@@ -55,7 +56,7 @@ class MakwaTest(unittest.TestCase):
 
         for (input, output) in matches:
             result = hexlify(m._kdf(unhexlify(input), 100))
-            self.assertEqual(result, output)
+            self.assertEqual(result, b(output))
 
     def test_kdf_sha512(self):
         m = Makwa(h=sha512)
@@ -67,7 +68,7 @@ class MakwaTest(unittest.TestCase):
 
         for (input, output) in matches:
             result = hexlify(m._kdf(unhexlify(input), 100))
-            self.assertEqual(result, output)
+            self.assertEqual(result, b(output))
 
 
 if __name__ == '__main__':
