@@ -3,7 +3,7 @@ python:
   - 2.7
   - 3.6
 install:
-  - pip install pep8
+  - pip install pep8 six
 before_script:
   - pep8 --max-line-length=200 --ignore=E402 */*.py
   - pip install -e .
