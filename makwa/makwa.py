@@ -5,16 +5,20 @@ from os import urandom
 from struct import pack
 
 
-def int_to_bytes(i):
+def int_to_bytes(i, outlen=None):
     bs = b''
     while i != 0:
         bs = pack('=B', i & 0xff) + bs
         i >>= 8
+
+    if outlen and len(bs) < outlen:
+        bs = '\x00' * (outlen - len(bs)) + bs
+
     return bs
 
 
-def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hashing=True):
-    makwa = Makwa(h=h, work_factor=work_factor, pre_hashing=pre_hashing)
+def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hashing=True, post_hashing_length=12):
+    makwa = Makwa(h=h, work_factor=work_factor, pre_hashing=pre_hashing, post_hashing_length=post_hashing_length)
     return makwa.hash(password, n, salt=salt)
 
 
@@ -27,13 +31,13 @@ def checkpw(password, hashed_password, n, h=sha256):
 
 
 class Makwa:
-    def __init__(self, h=sha256, work_factor=4096, pre_hashing=True):
+    def __init__(self, h=sha256, work_factor=4096, pre_hashing=True, post_hashing_length=12):
         self.h = h
         if work_factor == 0:
             raise ValueError('Work factor cannot be 0')
         self.m_cost = work_factor
         self.pre_hashing = pre_hashing
-        self.post_hashing_length = 12
+        self.post_hashing_length = post_hashing_length
 
     def hash(self, password, n, salt=None,):
         if not isinstance(password, bytes):
@@ -76,7 +80,7 @@ class Makwa:
             raise ValueError('Work factor cannot be 0')
         k = (n.bit_length() + 7) // 8
         if k < 160:
-            raise ValueError('Modulus must be >= 160 bits')
+            raise ValueError('Modulus must be >= 160 bytes')
 
         if self.pre_hashing:
             password = self._kdf(password, 64)
@@ -90,7 +94,7 @@ class Makwa:
         x = int(hexlify(xb), 16)
         for _ in range(self.m_cost + 1):
             x = pow(x, 2, n)
-        out = int_to_bytes(x)
+        out = int_to_bytes(x, outlen=k)
 
         if self.post_hashing_length not in [0, None]:
             out = self._kdf(out, self.post_hashing_length)
@@ -126,7 +130,7 @@ class Makwa:
 
         pre, post = self.pre_hashing, self.post_hashing_length
         if not pre and not post:
-            ret += 's'
+            ret += 'n'
         elif pre and not post:
             ret += 'r'
         elif not pre and post:
@@ -140,5 +144,5 @@ class Makwa:
             w //= 2
 
         ret += '2' if w == 1 else '3'
-        ret += str(delta - 1) if w == 1 else str(delta)
+        ret += (str(delta - 1) if w == 1 else str(delta)).zfill(2)
         return ret
