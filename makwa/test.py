@@ -34,7 +34,7 @@ class MakwaTest(unittest.TestCase):
         h = makwa.hash(pi, n, salt=sigma)
         self.assertEqual(h, '+RK3n5jz7gs_s211_xycDwiqW2ZkvPeqHZJfjkg_yc6g5u8JOTqxcQoI')
 
-        h = hashpw(pi, n, salt=sigma, work_factor=4096, pre_hashing=False)
+        h = hashpw(pi, n, salt=sigma, work_factor=4096, pre_hash=False)
         self.assertEqual(h, '+RK3n5jz7gs_s211_xycDwiqW2ZkvPeqHZJfjkg_yc6g5u8JOTqxcQoI')
         self.assertEqual(h, '+RK3n5jz7gs_s211_xycDwiqW2ZkvPeqHZJfjkg_yc6g5u8JOTqxcQoI')
 
