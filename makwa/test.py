@@ -53,8 +53,8 @@ class MakwaTest(unittest.TestCase):
 
         with open('kat.txt', 'r') as f:
             pattern = r'KDF/SHA-256\n' \
-                       'input: ([a-f0-9]*)\n' \
-                       'output: ([a-f0-9]*)'
+                'input: ([a-f0-9]*)\n' \
+                'output: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
         for (input, output) in matches:
@@ -67,8 +67,8 @@ class MakwaTest(unittest.TestCase):
 
         with open('kat.txt', 'r') as f:
             pattern = r'KDF/SHA-512\n' \
-                       'input: ([a-f0-9]*)\n' \
-                       'output: ([a-f0-9]*)'
+                'input: ([a-f0-9]*)\n' \
+                'output: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
         for (input, output) in matches:
@@ -80,12 +80,12 @@ class MakwaTest(unittest.TestCase):
 
         with open('kat.txt', 'r') as f:
             pattern = r'2048-bit modulus, SHA-256\n' \
-                       'input: ([a-f0-9]*)\n' \
-                       'salt: ([a-f0-9]*)\n' \
-                       'pre-hashing: (.*)\n' \
-                       'post-hashing: (.*)\n' \
-                       'bin384: ([a-f0-9]*)\n' \
-                       'bin4096: ([a-f0-9]*)'
+                'input: ([a-f0-9]*)\n' \
+                'salt: ([a-f0-9]*)\n' \
+                'pre-hashing: (.*)\n' \
+                'post-hashing: (.*)\n' \
+                'bin384: ([a-f0-9]*)\n' \
+                'bin4096: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
         for (input, salt, pre_hashing, post_hashing, bin384, bin4096) in matches:
@@ -112,12 +112,12 @@ class MakwaTest(unittest.TestCase):
 
         with open('kat.txt', 'r') as f:
             pattern = r'2048-bit modulus, SHA-512\n' \
-                       'input: ([a-f0-9]*)\n' \
-                       'salt: ([a-f0-9]*)\n' \
-                       'pre-hashing: (.*)\n' \
-                       'post-hashing: (.*)\n' \
-                       'bin384: ([a-f0-9]*)\n' \
-                       'bin4096: ([a-f0-9]*)'
+                'input: ([a-f0-9]*)\n' \
+                'salt: ([a-f0-9]*)\n' \
+                'pre-hashing: (.*)\n' \
+                'post-hashing: (.*)\n' \
+                'bin384: ([a-f0-9]*)\n' \
+                'bin4096: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
         for (input, salt, pre_hashing, post_hashing, bin384, bin4096) in matches:
@@ -146,14 +146,14 @@ class MakwaTest(unittest.TestCase):
 
         with open('kat.txt', 'r') as f:
             pattern = r'2048-bit modulus, SHA-256\n' \
-                       'input: ([a-f0-9]*)\n' \
-                       'salt: ([a-f0-9]*)\n' \
-                       'pre-hashing: (.*)\n' \
-                       'post-hashing: (.*)\n' \
-                       'bin384: [a-f0-9]*\n' \
-                       'bin4096: [a-f0-9]*\n' \
-                       'str384: ([A-Za-z0-9\+\/\_]*)\n' \
-                       'str4096: ([A-Za-z0-9\+\/\_]*)'
+                'input: ([a-f0-9]*)\n' \
+                'salt: ([a-f0-9]*)\n' \
+                'pre-hashing: (.*)\n' \
+                'post-hashing: (.*)\n' \
+                'bin384: [a-f0-9]*\n' \
+                'bin4096: [a-f0-9]*\n' \
+                'str384: ([A-Za-z0-9\+\/\_]*)\n' \
+                'str4096: ([A-Za-z0-9\+\/\_]*)'
             matches = findall(pattern, f.read())
 
         for (input, salt, pre_hashing, post_hashing, str384, str4096) in matches:
@@ -184,14 +184,14 @@ class MakwaTest(unittest.TestCase):
 
         with open('kat.txt', 'r') as f:
             pattern = r'2048-bit modulus, SHA-512\n' \
-                       'input: ([a-f0-9]*)\n' \
-                       'salt: ([a-f0-9]*)\n' \
-                       'pre-hashing: (.*)\n' \
-                       'post-hashing: (.*)\n' \
-                       'bin384: [a-f0-9]*\n' \
-                       'bin4096: [a-f0-9]*\n' \
-                       'str384: ([A-Za-z0-9\+\/\_]*)\n' \
-                       'str4096: ([A-Za-z0-9\+\/\_]*)'
+                'input: ([a-f0-9]*)\n' \
+                'salt: ([a-f0-9]*)\n' \
+                'pre-hashing: (.*)\n' \
+                'post-hashing: (.*)\n' \
+                'bin384: [a-f0-9]*\n' \
+                'bin4096: [a-f0-9]*\n' \
+                'str384: ([A-Za-z0-9\+\/\_]*)\n' \
+                'str4096: ([A-Za-z0-9\+\/\_]*)'
             matches = findall(pattern, f.read())
 
         for (input, salt, pre_hashing, post_hashing, str384, str4096) in matches:
