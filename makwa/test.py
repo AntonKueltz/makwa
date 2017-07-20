@@ -164,8 +164,8 @@ class MakwaTest(unittest.TestCase):
                 n,
                 salt=unhexlify(salt),
                 work_factor=384,
-                pre_hashing=pre_hashing,
-                post_hashing_length=post_hashing
+                pre_hash=pre_hashing,
+                post_hash=post_hashing
             )
             self.assertEqual(hashed, str384)
 
@@ -174,8 +174,8 @@ class MakwaTest(unittest.TestCase):
                 n,
                 salt=unhexlify(salt),
                 work_factor=4096,
-                pre_hashing=pre_hashing,
-                post_hashing_length=post_hashing
+                pre_hash=pre_hashing,
+                post_hash=post_hashing
             )
             self.assertEqual(hashed, str4096)
 
@@ -203,8 +203,8 @@ class MakwaTest(unittest.TestCase):
                 salt=unhexlify(salt),
                 h=sha512,
                 work_factor=384,
-                pre_hashing=pre_hashing,
-                post_hashing_length=post_hashing
+                pre_hash=pre_hashing,
+                post_hash=post_hashing
             )
             self.assertEqual(hashed, str384)
 
@@ -214,8 +214,8 @@ class MakwaTest(unittest.TestCase):
                 salt=unhexlify(salt),
                 h=sha512,
                 work_factor=4096,
-                pre_hashing=pre_hashing,
-                post_hashing_length=post_hashing
+                pre_hash=pre_hashing,
+                post_hash=post_hashing
             )
             self.assertEqual(hashed, str4096)
 
