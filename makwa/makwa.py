@@ -12,7 +12,7 @@ def int_to_bytes(i, outlen=None):
         i >>= 8
 
     if outlen and len(bs) < outlen:
-        bs = '\x00' * (outlen - len(bs)) + bs
+        bs = b'\x00' * (outlen - len(bs)) + bs
 
     return bs
 
