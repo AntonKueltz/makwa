@@ -17,8 +17,13 @@ def int_to_bytes(i, outlen=None):
     return bs
 
 
-def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hashing=True, post_hashing_length=12):
-    makwa = Makwa(h=h, work_factor=work_factor, pre_hashing=pre_hashing, post_hashing_length=post_hashing_length)
+def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hash=True, post_hash=12):
+    makwa = Makwa(
+        h=h,
+        work_factor=work_factor,
+        pre_hashing=pre_hash,
+        post_hashing_length=post_hash
+    )
     return makwa.hash(password, n, salt=salt)
 
 
