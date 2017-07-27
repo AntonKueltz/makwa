@@ -1,5 +1,6 @@
 from binascii import hexlify, unhexlify
 from hashlib import sha512
+from random import sample
 from re import findall
 from six import b
 import unittest
@@ -57,7 +58,7 @@ class MakwaTest(unittest.TestCase):
                 'output: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
-        for (input, output) in matches:
+        for (input, output) in sample(matches, 100):
             result = hexlify(m._kdf(unhexlify(input), 100))
             self.assertEqual(result, b(output))
 
@@ -71,7 +72,7 @@ class MakwaTest(unittest.TestCase):
                 'output: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
-        for (input, output) in matches:
+        for (input, output) in sample(matches, 100):
             result = hexlify(m._kdf(unhexlify(input), 100))
             self.assertEqual(result, b(output))
 
@@ -88,7 +89,7 @@ class MakwaTest(unittest.TestCase):
                 'bin4096: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
-        for (input, salt, pre_hashing, post_hashing, bin384, bin4096) in matches:
+        for (input, salt, pre_hashing, post_hashing, bin384, bin4096) in sample(matches, 100):
             pre_hashing = (pre_hashing == 'true')
             post_hashing = (None if post_hashing == 'false' else int(post_hashing))
             m = Makwa(
@@ -120,7 +121,7 @@ class MakwaTest(unittest.TestCase):
                 'bin4096: ([a-f0-9]*)'
             matches = findall(pattern, f.read())
 
-        for (input, salt, pre_hashing, post_hashing, bin384, bin4096) in matches:
+        for (input, salt, pre_hashing, post_hashing, bin384, bin4096) in sample(matches, 100):
             pre_hashing = (pre_hashing == 'true')
             post_hashing = (None if post_hashing == 'false' else int(post_hashing))
             m = Makwa(
@@ -156,7 +157,7 @@ class MakwaTest(unittest.TestCase):
                 'str4096: ([A-Za-z0-9\+\/\_]*)'
             matches = findall(pattern, f.read())
 
-        for (input, salt, pre_hashing, post_hashing, str384, str4096) in matches:
+        for (input, salt, pre_hashing, post_hashing, str384, str4096) in sample(matches, 100):
             pre_hashing = (pre_hashing == 'true')
             post_hashing = (None if post_hashing == 'false' else int(post_hashing))
             hashed = hashpw(
@@ -168,6 +169,7 @@ class MakwaTest(unittest.TestCase):
                 post_hash=post_hashing
             )
             self.assertEqual(hashed, str384)
+            self.assertTrue(checkpw(unhexlify(input), hashed, n))
 
             hashed = hashpw(
                 unhexlify(input),
@@ -178,6 +180,7 @@ class MakwaTest(unittest.TestCase):
                 post_hash=post_hashing
             )
             self.assertEqual(hashed, str4096)
+            self.assertTrue(checkpw(unhexlify(input), hashed, n))
 
     def test_hashpw_sha512(self):
         matches = []
@@ -194,7 +197,7 @@ class MakwaTest(unittest.TestCase):
                 'str4096: ([A-Za-z0-9\+\/\_]*)'
             matches = findall(pattern, f.read())
 
-        for (input, salt, pre_hashing, post_hashing, str384, str4096) in matches:
+        for (input, salt, pre_hashing, post_hashing, str384, str4096) in sample(matches, 100):
             pre_hashing = (pre_hashing == 'true')
             post_hashing = (None if post_hashing == 'false' else int(post_hashing))
             hashed = hashpw(
@@ -207,6 +210,7 @@ class MakwaTest(unittest.TestCase):
                 post_hash=post_hashing
             )
             self.assertEqual(hashed, str384)
+            self.assertTrue(checkpw(unhexlify(input), hashed, n, h=sha512))
 
             hashed = hashpw(
                 unhexlify(input),
@@ -218,6 +222,7 @@ class MakwaTest(unittest.TestCase):
                 post_hash=post_hashing
             )
             self.assertEqual(hashed, str4096)
+            self.assertTrue(checkpw(unhexlify(input), hashed, n, h=sha512))
 
 
 if __name__ == '__main__':

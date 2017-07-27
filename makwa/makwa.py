@@ -17,6 +17,18 @@ def int_to_bytes(i, outlen=None):
     return bs
 
 
+def base64(m):
+    b64 = b2a_base64(m)
+    if not isinstance(b64, str):
+        b64 = b64.decode()
+    return b64.replace('=', '').replace('\n', '')
+
+
+def unbase64(m):
+    padding = ((4 - (len(m) % 4)) % 4) * '='
+    return a2b_base64(m + padding)
+
+
 def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hash=True, post_hash=12):
     makwa = Makwa(
         h=h,
@@ -28,10 +40,20 @@ def hashpw(password, n, salt=None, h=sha256, work_factor=4096, pre_hash=True, po
 
 
 def checkpw(password, hashed_password, n, h=sha256):
-    state = hashed_password.split('_')[1]
+    _, state, _, hashed = hashed_password.split('_')
     work_factor = int(state[1]) * (1 << int(state[2:]))
-    pre_hashing = state[0] in 'rb'
-    makwa = Makwa(h=h, work_factor=work_factor, pre_hashing=pre_hashing)
+    pre_hash = state[0] in 'rb'
+    post_hash = None
+
+    if state[0] in 'sb':
+        post_hash = len(unbase64(hashed))
+
+    makwa = Makwa(
+        h=h,
+        work_factor=work_factor,
+        pre_hashing=pre_hash,
+        post_hashing_length=post_hash
+    )
     return makwa.check(password, hashed_password, n)
 
 
@@ -51,13 +73,13 @@ class Makwa:
             salt = urandom(16)
 
         h = ''
-        h += self._base64(self._kdf(int_to_bytes(n), 8))
+        h += base64(self._kdf(int_to_bytes(n), 8))
         h += '_'
         h += self._state_data()
         h += '_'
-        h += self._base64(salt)
+        h += base64(salt)
         h += '_'
-        h += self._base64(self._digest(password, n, salt=salt))
+        h += base64(self._digest(password, n, salt=salt))
         return h
 
     def check(self, password, hashed_password, n):
@@ -65,9 +87,9 @@ class Makwa:
             raise TypeError('Unicode-objects must be encoded before hashing')
 
         modhash, state, salt, digest = hashed_password.split('_')
-        modhash = self._unbase64(modhash)
-        salt = self._unbase64(salt)
-        digest = self._unbase64(digest)
+        modhash = unbase64(modhash)
+        salt = unbase64(salt)
+        digest = unbase64(digest)
 
         if self._kdf(int_to_bytes(n), 8) != modhash:
             return False
@@ -119,16 +141,6 @@ class Makwa:
             V = hmac.new(K, msg=V, digestmod=self.h).digest()
             T += V
         return T[:out_len]
-
-    def _base64(self, m):
-        b64 = b2a_base64(m)
-        if not isinstance(b64, str):
-            b64 = b64.decode()
-        return b64.replace('=', '').replace('\n', '')
-
-    def _unbase64(self, m):
-        padding = ((3 - (len(m) % 3)) % 3) * '='
-        return a2b_base64(m + padding)
 
     def _state_data(self):
         ret = ''
