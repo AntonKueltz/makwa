@@ -13,7 +13,7 @@ Makwa is a password hashing function designed by Thomas Pornin. This implementat
 .. code::
 
     Makwa is a candidate to the Password Hashing Competition.
-    
+
     Main characteristics:
     * based on modular arithmetics
     * CPU-only cost (not memory-hard)
@@ -21,12 +21,12 @@ Makwa is a password hashing function designed by Thomas Pornin. This implementat
     * factor increase, fast path, escrow
     * can be delegated
     * named after the Ojibwe name for the American black bear
-    
+
 Reference Material
 ==================
 
 - `Homepage`_
-- `Spec Paper`_ 
+- `Spec Paper`_
 - `Passwords14 Slides`_
 
 .. _Homepage: http://www.bolet.org/makwa/
@@ -46,10 +46,11 @@ Usage
 .. code:: python
 
     from makwa import hashpw, checkpw
-    
+
     hashed_pw = hashpw(
         password,
         n,
+        h=<hash function>,
         salt=<optional salt>,
         work_factor=<rounds>,
         pre_hash=<True|False>,
@@ -59,5 +60,6 @@ Usage
     is_valid = checkpw(
         password,
         hashed_pw,
-        n
+        n,
+        h=<hash function>
     )
